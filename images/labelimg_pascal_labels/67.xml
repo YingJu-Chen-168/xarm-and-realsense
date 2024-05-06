@@ -1,0 +1,26 @@
+<annotation>
+	<folder>還沒放上去</folder>
+	<filename>67.JPG</filename>
+	<path>C:\Ying-Ju Chen\Lab\robot xarm\GitHub\curebot\images\還沒放上去\67.JPG</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>3000</width>
+		<height>4000</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>wound</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1184</xmin>
+			<ymin>2597</ymin>
+			<xmax>2021</xmax>
+			<ymax>3082</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>clinical images</folder>
+	<filename>47.JPG</filename>
+	<path>C:\Ying-Ju Chen\Lab\robot xarm\GitHub\curebot\images\clinical images\47.JPG</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>3000</width>
+		<height>4000</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>wound</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1207</xmin>
+			<ymin>2597</ymin>
+			<xmax>2013</xmax>
+			<ymax>3088</ymax>
+		</bndbox>
+	</object>
+</annotation>
