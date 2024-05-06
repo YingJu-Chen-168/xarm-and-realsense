@@ -3,10 +3,10 @@ import numpy as np
 import time
 import pyrealsense2 as rs
 from ultralytics import YOLO
-from xarm_detection import RobotDetection
-from xarm_search import RobotSearch
-from xarm_treatment import RobotTreatment
-from xarm_gohome import RobotGoHome
+from xarm_movement.xarm_detection import RobotDetection
+from xarm_movement.xarm_search import RobotSearch
+from xarm_movement.xarm_treatment import RobotTreatment
+from xarm_movement.xarm_gohome import RobotGoHome
 from xarm import version
 from xarm.wrapper import XArmAPI
 
