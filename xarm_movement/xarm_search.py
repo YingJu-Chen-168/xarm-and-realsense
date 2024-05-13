@@ -100,6 +100,7 @@ class RobotSearch(object):
         try:
             self._tcp_speed = 100
             code = self._arm.set_position(*[420.0, 0.0, 220.0, 180.0, 2.0, 0.0], speed=self._tcp_speed, mvacc=self._tcp_acc, radius=0.0, wait=False)
+            time.sleep(2)
             if not self._check_code(code, 'set_position'):
                 return
         except Exception as e:
