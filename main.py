@@ -104,7 +104,7 @@ while True:
             if clss == 0:
                 cv2.rectangle(crop_color_img, (x1, y1), (x2, y2), (211, 0, 148),
                             thickness = 2, lineType = cv2.LINE_4)
-                cv2.putText(crop_color_img, text = model.names[clss], org = (x1 - 50, y1 + 20), fontFace = cv2.FONT_HERSHEY_SIMPLEX, 
+                cv2.putText(crop_color_img, text = model.names[clss], org = (x1, y1 + 20), fontFace = cv2.FONT_HERSHEY_SIMPLEX, 
                             fontScale = 0.7, color = (211, 0, 148), thickness = 2, lineType = cv2.LINE_4)
                 
                 intrinsics = depth_frame.profile.as_video_stream_profile().intrinsics
@@ -135,7 +135,7 @@ while True:
                     z_distance = int(depth4*1000)
                     print("x_distance = ", x_distance, ", y_distance = ", y_distance, ", z_distance = ", z_distance)
 
-                    cv2.putText(crop_color_img, text = f'W: {str(width)}mm H: {str(height)}mm', org = (x1 - 50, y1 + 40), fontFace = cv2.FONT_HERSHEY_SIMPLEX, 
+                    cv2.putText(crop_color_img, text = f'W: {str(width)}mm H: {str(height)}mm', org = (x1, y1 + 40), fontFace = cv2.FONT_HERSHEY_SIMPLEX, 
                             fontScale = 0.7, color = (211, 0, 148), thickness = 2, lineType = cv2.LINE_4)
 
                 else:
