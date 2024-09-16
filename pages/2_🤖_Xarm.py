@@ -57,10 +57,8 @@ def robot_move(Search = False, Object = False, Treatment = False, Home = False,
         robot_main.run()
 #####################
 
-x_distance, y_distance, z_distance, width, height, repeat = None, None, None, None, None, None
-
 # 機器人抬頭 + 辨識
-height = st.number_input("Key in the height you want robot to look up at.", max_value = 550, value = 250, placeholder = "height should between 100 mm and 550 mm.")
+height = st.number_input("Please enter the height you want the robot arm to raise.", max_value = 550, value = 250, placeholder = "Height should between 100 mm and 550 mm.")
 if height != None:
     height = int(height)
     st.write("The height is ", height)
@@ -137,7 +135,7 @@ if st.button("Search"):
                         y_distance = int((point4[1] - point1[1]) *1000)
                         z_distance = int(depth4*1000)
                         with size_container.container():
-                            st.write("寬 is:", width, "mm. 長 is:", height, "mm. ", " repeat = ", repeat, 
+                            st.write("width = ", width, "mm. height = ", height, "mm. ", " repeat time = ", repeat, 
                                     ", x_distance = ", x_distance, ", y_distance = ", y_distance, ", z_distance = ", z_distance)
                     else:
                         continue
@@ -147,20 +145,20 @@ if st.button("Search"):
         if st.session_state["finish"]:
             break
 else:
-    st.caption("Press the button to look up.")
+    st.caption("Press the button to raise.")
 st.divider()
 #####################
 
 # 機器人去目標
-x_distance = st.number_input("Key in the x_distance", max_value = 550, value = x_distance, placeholder = "x_distance should between 0 mm and 550 mm.")
+x_distance = st.number_input("Please enter the x_distance.", max_value = 550, value = None, placeholder = "x_distance should between 0 mm and 550 mm.")
 if x_distance != None:
     x_distance = int(x_distance)
     st.write("The x_distance is ", x_distance)
-y_distance = st.number_input("Key in the y_distance", max_value = 300, value = y_distance, placeholder = "y_distance should between 0 mm and 300 mm.")
+y_distance = st.number_input("Please enter the y_distance.", max_value = 300, value = None, placeholder = "y_distance should between 0 mm and 300 mm.")
 if y_distance != None:
     y_distance = int(y_distance)
     st.write("The y_distance is ", y_distance)
-z_distance = st.number_input("Key in the z_distance", min_value = 100, max_value = 550, value = z_distance, placeholder = "z_distance should between 100 mm and 550 mm.")
+z_distance = st.number_input("Please enter the z_distance.", min_value = 100, max_value = 550, value = None, placeholder = "z_distance should between 100 mm and 550 mm.")
 if z_distance != None:
     z_distance = int(z_distance)
     st.write("The z_distance is ", z_distance)
@@ -177,11 +175,11 @@ st.divider()
 #####################
 
 # 機器人治療
-repeat = st.number_input("Key in the repeat", min_value = 1, value = repeat, placeholder = "repeat should larger than 0")
+repeat = st.number_input("Please enter the repeat time.", min_value = 1, value = None, placeholder = "repeat should larger than 0")
 if repeat != None:
     repeat = int(repeat)
     st.write("The repeat is ", repeat)
-width = st.number_input("Key in the width", max_value = 500, value = width, placeholder = "width should between 0 mm and 500 mm.")
+width = st.number_input("Please enter the width.", max_value = 500, value = None, placeholder = "width should between 0 mm and 500 mm.")
 if width != None:
     width = int(width)
     st.write("The width is ", width)
