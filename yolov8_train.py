@@ -7,7 +7,7 @@ from ultralytics import YOLO
 # CLI: yolo task=segment mode=train epochs=100 data=data_config.yaml model=yolov8n-seg.pt imgsz=640 batch=8 (預設的batch是16!!!)
 # CLI: yolo task=segment mode=predict model=best.pt source="data/predict/50.jpg" show=True
 
-model = YOLO('best.pt')
+model = YOLO('yolov8n-seg.pt')
 results = model.predict(source="data/predict", show= True, save= True)
 
 # CLI: command line interface 

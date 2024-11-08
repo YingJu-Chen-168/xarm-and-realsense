@@ -97,7 +97,7 @@ class RobotGoHome(object):
     # Robot Main Run
     def run(self):
         try:
-            self._tcp_speed = 100
+            self._tcp_speed = 50
             self._arm.move_gohome()
         except Exception as e:
             self.pprint('MainException: {}'.format(e))

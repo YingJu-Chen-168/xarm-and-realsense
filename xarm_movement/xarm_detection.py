@@ -101,7 +101,7 @@ class RobotDetection(object):
     # Robot Main Run
     def run(self):
         try:
-            self._tcp_speed = 100
+            self._tcp_speed = 50
             code = self._arm.set_position(x=self._x_position, y=self._y_position, z=self._z_position, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
             if not self._check_code(code, 'set_position'):
                 return
