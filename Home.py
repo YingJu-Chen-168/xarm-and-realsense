@@ -12,9 +12,11 @@ st.subheader("", divider='rainbow')
 st.markdown(
     """
     ### Student
-    - Ying Ju Chen
+    - [Ying Ju Chen](https://www.facebook.com/yingjuju.528?locale=zh_TW)
 """
 )
+
+st.sidebar.success("Select a demo above.")
 
 #   streamlit run Home.py
 #   .\ssl-proxy.exe -from 0.0.0.0:443 -to localhost:8501
