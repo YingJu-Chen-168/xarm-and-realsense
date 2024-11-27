@@ -124,6 +124,7 @@ def all_start():
 def capture_again():
     robot_search()
     time.sleep(1)
+    st.session_state.capture = False
 def start_from_the_begining():
     st.session_state.all_start = False
     st.session_state.all_stop = False
@@ -182,7 +183,7 @@ if st.session_state.all_start:
                             repeat_container = st.empty()
                             notice_container.markdown('The depth camera is capturing.')
                             time.sleep(1)
-                            for i in range(20):
+                            for i in range(50):
                                 frames = pipeline.wait_for_frames()
                                 aligned_frames = align.process(frames)
                                 color_frame = aligned_frames.get_color_frame()
@@ -193,7 +194,7 @@ if st.session_state.all_start:
                                 depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.08), cv2.COLORMAP_JET)
                                 crop_color_img = color_image[y:y+h, x:x+w]
                                 crop_depth_img = depth_colormap[y:y+h, x:x+w]
-                                results = model(crop_color_img, classes = 0)
+                                results = model(crop_color_img, classes = 67)
                                 annotated_frame = results[0].plot()
                                 intrinsics = depth_frame.profile.as_video_stream_profile().intrinsics
                                 image_container.image(annotated_frame)
@@ -236,7 +237,7 @@ if st.session_state.all_start:
                                     size_container.markdown(f"width = {width} mm, height = {height} mm")
                                     distance_container.markdown(f'x_distance = {x_distance} mm, y_distance = {y_distance} mm, z_distance = {z_distance} mm')
                                     repeat_container.markdown(f"repeat time = {repeat}")
-                                time.sleep(0.05)
+                                    time.sleep(0.05)
                             notice_container.empty()
                             image_container.empty()
                             st.text_input('(x, y, z) distance + width + repeat', value = information, key = 'from_widget')

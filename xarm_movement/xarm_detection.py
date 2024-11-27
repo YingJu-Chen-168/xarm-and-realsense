@@ -19,7 +19,7 @@ class RobotDetection(object):
         self._y_position = y_position
         self._z_position = z_position
         self._tcp_speed = 100
-        self._tcp_acc = 2000
+        self._tcp_acc = 1000
         self._angle_speed = 20
         self._angle_acc = 500
         self._vars = {}

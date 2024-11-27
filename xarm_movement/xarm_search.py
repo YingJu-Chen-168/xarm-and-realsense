@@ -16,7 +16,7 @@ class RobotSearch(object):
         self.alive = True
         self._arm = robot
         self._tcp_speed = 100
-        self._tcp_acc = 2000
+        self._tcp_acc = 1000
         self._angle_speed = 20
         self._angle_acc = 500
         self._vars = {}
@@ -99,7 +99,7 @@ class RobotSearch(object):
     def run(self):
         try:
             self._tcp_speed = 50
-            code = self._arm.set_position(*[250.0, -150.0, 400.0, 180.0, 2.0, 0.0], speed=self._tcp_speed, mvacc=self._tcp_acc, radius=0.0, wait=False)
+            code = self._arm.set_position(*[250.0, -50.0, 400, 180.0, 2.0, -10], speed=self._tcp_speed, mvacc=self._tcp_acc, radius=0.0, wait=False)
             time.sleep(2)
             if not self._check_code(code, 'set_position'):
                 return
