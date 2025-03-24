@@ -13,15 +13,16 @@ import cv2
 
 class RobotTreatment(object):
     """Robot Main Class"""
-    def __init__(self, robot, repeat_time, width, **kwargs):
+    def __init__(self, robot, width, repeat_time, **kwargs):
         self.alive = True
         self._arm = robot
-        self._repeat_time = repeat_time
         self._width = width
-        self._tcp_speed = 100
-        self._tcp_acc = 1000
+        self._repeat_time = repeat_time
+        self._tcp_speed = 50
+        self._tcp_acc = 500
         self._angle_speed = 20
         self._angle_acc = 500
+        self._M2_diameter = 2
         self._vars = {}
         self._funcs = {}
         self._robot_init()
@@ -98,29 +99,139 @@ class RobotTreatment(object):
         else:
             return False
 
+    def check_plasma_cycle(self, accumulated_plasma_cycle):
+        self._tcp_speed = 30
+        rest_time = 11
+        plasma_space = 105
+        countdown = rest_time - (plasma_space / self._tcp_speed) - 1
+        try:
+            if accumulated_plasma_cycle % 30 == 0:
+                time.sleep(0.2)
+                code = self._arm.set_position(y = plasma_space, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                if not self._check_code(code, 'set_position'):
+                    return
+                time.sleep(countdown)
+            elif accumulated_plasma_cycle % 30 == 15:
+                code = self._arm.set_position(y = -plasma_space, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                if not self._check_code(code, 'set_position'):
+                    return
+                time.sleep(countdown)
+            else:
+                time.sleep(rest_time)
+            self._tcp_speed = 50
+        except Exception as e:
+            self.pprint('MainException: {}'.format(e))
+
     # Robot Main Run
     def run(self):
         try:
-            self._tcp_speed = 10
-            for i in range(int(self._repeat_time)):
+            self._tcp_speed = 50
+            loop = 2 * int(self._repeat_time)   # 看要不要改成 *2，讓路徑比較貼合真實範圍
+            working_diatance = 153            
+            accumulated_distance = 0
+            accumulated_plasma_cycle = 0
+            for i in range(loop):
                 if not self.is_alive:
                     break
-                code = self._arm.set_position(y= - self._width, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
-                if not self._check_code(code, 'set_position'):
-                    return
-                code = self._arm.set_position(x= - 15, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
-                if not self._check_code(code, 'set_position'):
-                    return
-                code = self._arm.set_position(y=self._width, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
-                if not self._check_code(code, 'set_position'):
-                    return
-                code = self._arm.set_position(x= - 15, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
-                if not self._check_code(code, 'set_position'):
-                    return
-                key = cv2.waitKey(1500)
-                if key == 27 or key == 32: # Esc & Space
-                    print('break')
-                    break
+                ##
+                if i % 4 == 0:
+                    remain_diatance = working_diatance - accumulated_distance
+                    if remain_diatance >= self._width:
+                        code = self._arm.set_position(y = -self._width, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_distance = accumulated_distance + self._width   
+                    elif remain_diatance < self._width:
+                        code = self._arm.set_position(y = -remain_diatance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)   
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_plasma_cycle = accumulated_plasma_cycle + 1
+                        self.check_plasma_cycle(accumulated_plasma_cycle)
+                        # 加上手臂位移
+                        if (self._width - remain_diatance) >= working_diatance:
+                            repeat = self._width // working_diatance
+                            for i in range(repeat):
+                                code = self._arm.set_position(y = -working_diatance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
+                                if not self._check_code(code, 'set_position'):
+                                    return
+                                accumulated_plasma_cycle = accumulated_plasma_cycle + 1
+                                self.check_plasma_cycle(accumulated_plasma_cycle)
+                            accumulated_distance = self._width - remain_diatance - repeat * working_diatance   
+                            code = self._arm.set_position(y = -accumulated_distance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                            if not self._check_code(code, 'set_position'):
+                                return                     
+                        elif (self._width - remain_diatance) < working_diatance:
+                            accumulated_distance = self._width - remain_diatance
+                            code = self._arm.set_position(y = -accumulated_distance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                            if not self._check_code(code, 'set_position'):
+                                return                
+                ##
+                elif i % 4 == 1:
+                    remain_diatance = working_diatance - accumulated_distance
+                    if remain_diatance >= self._M2_diameter:
+                        code = self._arm.set_position(x = - self._M2_diameter, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_distance = accumulated_distance + self._M2_diameter   
+                    elif remain_diatance < self._M2_diameter:
+                        code = self._arm.set_position(x = - remain_diatance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)   
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_plasma_cycle = accumulated_plasma_cycle + 1
+                        self.check_plasma_cycle(accumulated_plasma_cycle)
+                        accumulated_distance = self._M2_diameter - remain_diatance  
+                        code = self._arm.set_position(x = -accumulated_distance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
+                        if not self._check_code(code, 'set_position'):
+                            return     
+                ## 
+                elif i % 4 == 2:
+                    remain_diatance = working_diatance - accumulated_distance
+                    if remain_diatance >= self._width:
+                        code = self._arm.set_position(y = self._width, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_distance = accumulated_distance + self._width   
+                    elif remain_diatance < self._width:
+                        code = self._arm.set_position(y = remain_diatance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True) 
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_plasma_cycle = accumulated_plasma_cycle + 1
+                        self.check_plasma_cycle(accumulated_plasma_cycle)
+                        if (self._width - remain_diatance) >= working_diatance:
+                            repeat = self._width // working_diatance
+                            for i in range(repeat):
+                                code = self._arm.set_position(y = working_diatance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
+                                if not self._check_code(code, 'set_position'):
+                                    return
+                                accumulated_plasma_cycle = accumulated_plasma_cycle + 1
+                                self.check_plasma_cycle(accumulated_plasma_cycle)
+                            accumulated_distance = self._width - remain_diatance - repeat * working_diatance   
+                            code = self._arm.set_position(y = accumulated_distance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                            if not self._check_code(code, 'set_position'):
+                                return                     
+                        elif (self._width - remain_diatance) < working_diatance:
+                            accumulated_distance = self._width - remain_diatance
+                            code = self._arm.set_position(y = accumulated_distance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                            if not self._check_code(code, 'set_position'):
+                                return              
+                ##
+                elif i % 4 == 3:
+                    remain_diatance = working_diatance - accumulated_distance
+                    if remain_diatance > self._M2_diameter:
+                        code = self._arm.set_position(x = - self._M2_diameter, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)                            
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_distance = accumulated_distance + self._M2_diameter   
+                    elif remain_diatance <= self._M2_diameter:
+                        code = self._arm.set_position(x = - remain_diatance, radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)    
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_plasma_cycle = accumulated_plasma_cycle + 1
+                        self.check_plasma_cycle(accumulated_plasma_cycle)
+                        code = self._arm.set_position(x = - (self._M2_diameter - remain_diatance), radius=-1, speed=self._tcp_speed, mvacc=self._tcp_acc, relative=True, wait=True)
+                        if not self._check_code(code, 'set_position'):
+                            return
+                        accumulated_distance = self._M2_diameter - remain_diatance  
         except Exception as e:
             self.pprint('MainException: {}'.format(e))
         self.alive = False
@@ -128,3 +239,8 @@ class RobotTreatment(object):
         self._arm.release_state_changed_callback(self._state_changed_callback)
         if hasattr(self._arm, 'release_count_changed_callback'):
             self._arm.release_count_changed_callback(self._count_changed_callback)
+
+def treatment_run(repeat, width):
+    arm = XArmAPI('192.168.1.222', baud_checkset=False)
+    robot_main = RobotTreatment(arm, repeat, width)
+    robot_main.run()

@@ -18,8 +18,8 @@ class RobotDetection(object):
         self._x_position = x_position
         self._y_position = y_position
         self._z_position = z_position
-        self._tcp_speed = 100
-        self._tcp_acc = 1000
+        self._tcp_speed = 50
+        self._tcp_acc = 500
         self._angle_speed = 20
         self._angle_acc = 500
         self._vars = {}
@@ -112,3 +112,8 @@ class RobotDetection(object):
         self._arm.release_state_changed_callback(self._state_changed_callback)
         if hasattr(self._arm, 'release_count_changed_callback'):
             self._arm.release_count_changed_callback(self._count_changed_callback)
+
+def detection_run(x_distance, y_distance, z_distance):
+    arm = XArmAPI('192.168.1.222', baud_checkset=False)
+    robot_main = RobotDetection(arm, y_distance - 150, x_distance + 80, -(z_distance - 130))
+    robot_main.run()

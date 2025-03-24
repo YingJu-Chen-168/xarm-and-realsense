@@ -1,0 +1,6 @@
+Pre-training  IoU (%)  Dice Coefficient (%)  Precision (%)  Recall (%)  Loss
+             
+No             87.42          92.02             96.59        96.55      0.0246
+               88.02          92.41             96.59        97.03      0.0222
+               82.34          88.11             93.75        95.09      0.0676
+  

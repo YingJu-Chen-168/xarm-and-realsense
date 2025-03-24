@@ -1,13 +1,6 @@
 # linear motion
-import sys
-import math
 import time
-import queue
-import datetime
-import random
 import traceback
-import threading
-from xarm import version
 from xarm.wrapper import XArmAPI
 
 class RobotSearch(object):
@@ -15,8 +8,8 @@ class RobotSearch(object):
     def __init__(self, robot, **kwargs):
         self.alive = True
         self._arm = robot
-        self._tcp_speed = 100
-        self._tcp_acc = 1000
+        self._tcp_speed = 50
+        self._tcp_acc = 500
         self._angle_speed = 20
         self._angle_acc = 500
         self._vars = {}
@@ -98,8 +91,8 @@ class RobotSearch(object):
     # Robot Main Run
     def run(self):
         try:
-            self._tcp_speed = 50
-            code = self._arm.set_position(*[250.0, -50.0, 400, 180.0, 2.0, -10], speed=self._tcp_speed, mvacc=self._tcp_acc, radius=0.0, wait=False)
+            self._tcp_speed = 70
+            code = self._arm.set_position(*[425.0, 0, 500, 180.0, 1.1, 1], speed=self._tcp_speed, mvacc=self._tcp_acc, radius=0.0, wait=False)
             time.sleep(2)
             if not self._check_code(code, 'set_position'):
                 return
@@ -110,3 +103,10 @@ class RobotSearch(object):
         self._arm.release_state_changed_callback(self._state_changed_callback)
         if hasattr(self._arm, 'release_count_changed_callback'):
             self._arm.release_count_changed_callback(self._count_changed_callback)
+
+def search_run():
+    arm = XArmAPI('192.168.1.222', baud_checkset=False)
+    robot_main = RobotSearch(arm)
+    robot_main.run()
+
+# search_run()

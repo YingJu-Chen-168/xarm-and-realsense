@@ -1,0 +1,4 @@
+epoch 100 
+learning_rate 9e-4
+feature 24
+levels 5

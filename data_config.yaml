@@ -1,8 +1,0 @@
-path: "C:\\Ying-Ju Chen\\Lab\\robot xarm\\GitHub\\curebot\\data"
-train: train
-val:  val
-
-nc: 1
-
-names:
-  0: wound

@@ -1,0 +1,4 @@
+epoch 100 
+batch size 8 
+feature 24
+levels 5
